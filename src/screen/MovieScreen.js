@@ -1,13 +1,100 @@
-import { View } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { useEffect, useState } from "react";
+import { FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { FetchMoviesService } from "../Service/FetchMovieService";
+import { API_IMAGE_URI } from "../utils/Constant";
 
-export default function MovieScreen() {
-
-    return (
-        <View>
-            <Text>Ini Halaman MovieScreen</Text>
+const MovieScreen = () => {
+    const [movies, setMovies] = useState([]);
+  
+    const navigation = useNavigation();
+  
+    useEffect(() => {
+      fetchMoviesData()
+    }, []);
+  
+    const fetchMoviesData = async () => {
+      try {
+        const data = await FetchMoviesService();
+        setMovies(data);
+      
+      } catch (error) {
+        console.error(`Can't fetch movies`, error);
+      
+      }
+    };
+  
+    const handleMovieDetail = (id) => {
+      navigation.navigate('MovieDetail', { movieId: id });
+    };
+  
+    const renderItem = ({ item }) => (
+      <View style={styles.movieItem}>
+        <Image
+          source={{ uri: `${API_IMAGE_URI}/t/p/w500/${item.poster_path}` }}
+          style={styles.posterImage}
+        />
+        <View style={styles.movieInfo}>
+          <Text style={styles.movieTitle}>{item.title}</Text>
+          <TouchableOpacity
+            style={styles.detailButton}
+            onPress={() => handleMovieDetail(item.id)}
+          >
+            <Text style={styles.detailButtonText}>Detail</Text>
+          </TouchableOpacity>
         </View>
-    )
-
-}
+      </View>
+    );
+  
+    return (
+      <View style={styles.container}>
+        <FlatList
+          data={movies}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.id.toString()}
+          contentContainerStyle={styles.movieList}
+        />
+      </View>
+    );
+  };
+  
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: '#fff',
+    },
+    movieList: {
+      padding: 16,
+    },
+    movieItem: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      marginBottom: 16,
+    },
+    posterImage: {
+      width: 80,
+      height: 120,
+      marginRight: 12,
+    },
+    movieInfo: {
+      flex: 1,
+    },
+    movieTitle: {
+      fontSize: 16,
+    },
+    detailButton: {
+      marginTop: 8,
+      backgroundColor: '#007BFF',
+      paddingVertical: 6,
+      paddingHorizontal: 12,
+      borderRadius: 4,
+    },
+    detailButtonText: {
+      color: '#fff',
+    },
+  });
+  
+  export default MovieScreen;
+  
 
 
