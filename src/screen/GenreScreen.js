@@ -1,7 +1,7 @@
 import { Text, View, FlatList, StyleSheet, Dimensions } from "react-native";
 import React, { useState, useEffect } from 'react';
-import { fetchGenresService } from '../service/FetchGenreService'
 import { stylesTheme } from "../theme/Index";
+import { fetchGenreService } from "../Service/FetchGenreService";
 
 
 const GenreScreen = () => {
@@ -13,7 +13,7 @@ const GenreScreen = () => {
 
     const fetchGenresData = async () => {
         try {
-            const data = await fetchGenresService();
+            const data = await fetchGenreService();
             setGenres(data);
 
         } catch (error) {
@@ -47,7 +47,7 @@ const GenreScreen = () => {
             <View className="items-center">
                 <View className="flex-row justify-between items-center mx-4">
                     <Text className="text-white text-3xl font-bold mt-8">
-                        <Text style={stylesTheme.text}>List of Genre</Text>
+                        <Text style={styles.text}>List of Genre</Text>
                     </Text>
 
                 </View>
@@ -57,8 +57,8 @@ const GenreScreen = () => {
                         keyExtractor={(item) => item.id.toString()}
                         numColumns={numColumns}
                         renderItem={({ item }) => (
-                            <View style={stylesTheme.genreItem}>
-                                <Text style={stylesTheme.genreText}>{item.name}</Text>
+                            <View style={styles.genreItem}>
+                                <Text style={styles.genreText}>{item.name}</Text>
                             </View>
                         )}
                     />

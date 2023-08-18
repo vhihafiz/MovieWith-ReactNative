@@ -11,7 +11,7 @@ export default function AppNavigation() {
         <NavigationContainer>
             <Stack.Navigator>
                 <Stack.Screen name="Home" options={{ headerShown: false }} component={HomeScreen} />
-                <Stack.Screen name="Home" options={{ headerShown: false }} component={GenreScreen} />
+                <Stack.Screen name="Genre" options={{ headerShown: false }} component={GenreScreen} />
             </Stack.Navigator>
         </NavigationContainer>
     )
