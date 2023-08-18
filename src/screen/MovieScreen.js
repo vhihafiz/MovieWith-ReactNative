@@ -3,98 +3,105 @@ import { useEffect, useState } from "react";
 import { FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { FetchMoviesService } from "../Service/FetchMovieService";
 import { API_IMAGE_URI } from "../utils/Constant";
+import Loading from "../components/Loading";
 
 const MovieScreen = () => {
+    const [loading, setLoading] = useState(true);
     const [movies, setMovies] = useState([]);
-  
+
     const navigation = useNavigation();
-  
+
     useEffect(() => {
-      fetchMoviesData()
+        fetchMoviesData()
     }, []);
-  
+
     const fetchMoviesData = async () => {
-      try {
-        const data = await FetchMoviesService();
-        setMovies(data);
-      
-      } catch (error) {
-        console.error(`Can't fetch movies`, error);
-      
-      }
+        try {
+            const data = await FetchMoviesService();
+            setMovies(data);
+            setLoading(false);
+
+        } catch (error) {
+            console.error(`Can't fetch movies`, error);
+            setLoading(false);
+        }
     };
-  
+
     const handleMovieDetail = (id) => {
-      navigation.navigate('MovieDetail', { movieId: id });
+        navigation.navigate('MovieDetail', { movieId: id });
     };
-  
+
     const renderItem = ({ item }) => (
-      <View style={styles.movieItem}>
-        <Image
-          source={{ uri: `${API_IMAGE_URI}/t/p/w500/${item.poster_path}` }}
-          style={styles.posterImage}
-        />
-        <View style={styles.movieInfo}>
-          <Text style={styles.movieTitle}>{item.title}</Text>
-          <TouchableOpacity
-            style={styles.detailButton}
-            onPress={() => handleMovieDetail(item.id)}
-          >
-            <Text style={styles.detailButtonText}>Detail</Text>
-          </TouchableOpacity>
+
+        <View style={styles.movieItem}>
+            <Image
+                source={{ uri: `${API_IMAGE_URI}/t/p/w500/${item.poster_path}` }}
+                style={styles.posterImage}
+            />
+            <View style={styles.movieInfo}>
+                <Text style={styles.movieTitle} className="text-white">{item.title}</Text>
+                <TouchableOpacity
+                    style={styles.detailButton}
+                    onPress={() => handleMovieDetail(item.id)}
+                >
+                    <Text style={styles.detailButtonText}>Detail</Text>
+                </TouchableOpacity>
+            </View>
         </View>
-      </View>
+
     );
-  
-    return (
-      <View style={styles.container}>
-        <FlatList
-          data={movies}
-          renderItem={renderItem}
-          keyExtractor={(item) => item.id.toString()}
-          contentContainerStyle={styles.movieList}
-        />
-      </View>
+
+    return loading ?
+    <Loading/>
+    :(
+        <View style={styles.container}>
+            <FlatList
+                data={movies}
+                renderItem={renderItem}
+                keyExtractor={(item) => item.id.toString()}
+                contentContainerStyle={styles.movieList}
+            />
+        </View>
     );
-  };
-  
-  const styles = StyleSheet.create({
+};
+
+const styles = StyleSheet.create({
     container: {
-      flex: 1,
-      backgroundColor: '#fff',
+        flex: 1,
+        backgroundColor: '#27272A',
     },
     movieList: {
-      padding: 16,
+        padding: 16,
     },
     movieItem: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      marginBottom: 16,
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 16,
     },
     posterImage: {
-      width: 80,
-      height: 120,
-      marginRight: 12,
+        width: 100,
+        height: 140,
+        marginRight: 12,
     },
     movieInfo: {
-      flex: 1,
+        flex: 1,
     },
     movieTitle: {
-      fontSize: 16,
+        fontSize: 16,
     },
     detailButton: {
-      marginTop: 8,
-      backgroundColor: '#007BFF',
-      paddingVertical: 6,
-      paddingHorizontal: 12,
-      borderRadius: 4,
+        marginTop: 8,
+        backgroundColor: '#007BFF',
+        paddingVertical: 6,
+        paddingHorizontal: 12,
+        borderRadius: 4,
     },
     detailButtonText: {
-      color: '#fff',
+        color: '#fff',
     },
-  });
-  
-  export default MovieScreen;
-  
+});
+
+export default MovieScreen;
+
 
 

@@ -2,9 +2,13 @@ import { Text, View, FlatList, StyleSheet, Dimensions } from "react-native";
 import React, { useState, useEffect } from 'react';
 import { stylesTheme } from "../theme/Index";
 import { fetchGenreService } from "../Service/FetchGenreService";
+import Loading from "../components/Loading";
+
+
 
 
 const GenreScreen = () => {
+    const [loading, setLoading] = useState(true);
     const [genres, setGenres] = useState([]);
 
     useEffect(() => {
@@ -15,9 +19,11 @@ const GenreScreen = () => {
         try {
             const data = await fetchGenreService();
             setGenres(data);
+            setLoading(false);
 
         } catch (error) {
-            console.error('Fetch failed', error)
+            console.error('Fetch failed', error);
+            setLoading(false);
         }
     }
 
@@ -42,7 +48,10 @@ const GenreScreen = () => {
         },
     });
 
-    return (
+    return loading ?
+    <Loading/>
+    : (
+        // return (
         <View className="flex-1 bg-neutral-800">
             <View className="items-center">
                 <View className="flex-row justify-between items-center mx-4">
