@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { fetchMovieDetailService, fetchReviewService, handleLoadMoreService } from "../Service/FetchMovieDetailService";
-import { ActivityIndicator, FlatList, Image, StyleSheet, Text, View } from "react-native";
-import { useRoute } from "@react-navigation/native";
+import { ActivityIndicator, FlatList, Image, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { API_IMAGE_URI } from "../utils/Constant";
 import Loading from "../components/Loading";
+import { ChevronLeftIcon } from "react-native-heroicons/outline";
 
 
 const MovieDetailScreen = () => {
@@ -12,6 +13,8 @@ const MovieDetailScreen = () => {
   const [reviews, setReviews] = useState([]);
   const route = useRoute();
   const { movieId } = route.params;
+  const navigation = useNavigation();
+
 
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
@@ -53,6 +56,13 @@ const MovieDetailScreen = () => {
     <Loading />
     : (
       <View style={styles.container}>
+
+      <SafeAreaView className={"absolute z-20 w-full flex-row justify-between items-center px-4 mt-8"}>
+          <TouchableOpacity style={styles.background} className="rounded-xl p-1" onPress={() => navigation.goBack()}>
+              <ChevronLeftIcon size="28" strokeWidth={2.5} color="white" />
+          </TouchableOpacity>
+      </SafeAreaView>
+
         <FlatList
           data={reviews}
           keyExtractor={(item) => item.id.toString()}
@@ -86,8 +96,8 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   posterImage: {
-    width: 200,
-    height: 300,
+    width: 250,
+    height: 350,
     alignSelf: 'center',
     marginBottom: 16,
   },
@@ -97,10 +107,12 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   movieOverview: {
+    textAlign: "justify",
     fontSize: 16,
     marginBottom: 16,
   },
   reviewTitle: {
+
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 8,
@@ -114,6 +126,7 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   reviewContent: {
+    textAlign: "justify",
     fontSize: 14,
   },
 });

@@ -1,8 +1,10 @@
-import { Text, View, FlatList, StyleSheet, Dimensions } from "react-native";
+import { Text, View, FlatList, StyleSheet, Dimensions, SafeAreaView, TouchableOpacity } from "react-native";
 import React, { useState, useEffect } from 'react';
 import { stylesTheme } from "../theme/Index";
 import { fetchGenreService } from "../Service/FetchGenreService";
 import Loading from "../components/Loading";
+import { ChevronLeftIcon } from "react-native-heroicons/outline";
+import { useNavigation } from "@react-navigation/native";
 
 
 
@@ -10,6 +12,8 @@ import Loading from "../components/Loading";
 const GenreScreen = () => {
     const [loading, setLoading] = useState(true);
     const [genres, setGenres] = useState([]);
+    const navigation = useNavigation();
+
 
     useEffect(() => {
         fetchGenresData();
@@ -53,6 +57,13 @@ const GenreScreen = () => {
     : (
         // return (
         <View className="flex-1 bg-neutral-800">
+
+        <SafeAreaView className={"absolute z-20 w-full flex-row justify-between items-center px-4 mt-8"}>
+             <TouchableOpacity style={styles.background} className="rounded-xl p-1" onPress={() => navigation.goBack()}>
+                    <ChevronLeftIcon size="28" strokeWidth={2.5} color="white" />
+            </TouchableOpacity>
+        </SafeAreaView>
+
             <View className="items-center">
                 <View className="flex-row justify-between items-center mx-4">
                     <Text className="text-white text-3xl font-bold mt-8">
@@ -73,6 +84,7 @@ const GenreScreen = () => {
                     />
                 </View>
             </View>
+
         </View>
 
     );
